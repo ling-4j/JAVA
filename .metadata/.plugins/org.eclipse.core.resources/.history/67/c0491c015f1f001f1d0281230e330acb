@@ -1,0 +1,138 @@
+package objects;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+public class TVManagerImpl implements TVManager {
+    protected ArrayList<TV> list = new ArrayList<>();
+
+    // Kiểm tra TV đã tồn tại
+    private boolean isExisting(TV t) {
+        for (TV tv : list) {
+            if (tv.getproduct_id().equals(t.getproduct_id())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addTV(TV t) {
+        if (isExisting(t)) {
+            return false;
+        }
+        return list.add(t);
+    }
+
+    @Override
+    public boolean editTV(TV t) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getproduct_id().equals(t.getproduct_id())) {
+                list.set(i, t);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean delTV(TV t) {
+        return list.removeIf(tv -> tv.getproduct_id().equals(t.getproduct_id()));
+    }
+
+    @Override
+    public List<TV> searchTV(String keyword) {
+        return list.stream()
+                .filter(tv -> tv.getproduct_name().toLowerCase().contains(keyword.toLowerCase()) ||
+                        String.valueOf(tv.getscreen_size()).equals(keyword))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TV> searchByPrice(double price) {
+        return list.stream()
+                .filter(tv -> tv.getproduct_price() == price)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TV> sortByPrice(double price) {
+        return list.stream()
+                .filter(tv -> tv.getproduct_price() == price)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TV> sortByResolution(String resolution) {
+        return list.stream()
+                .filter(tv -> tv.getResolution().equalsIgnoreCase(resolution))
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public void generateList(int n) {
+        String[] brands = {"Samsung", "LG", "Sony", "Panasonic", "Toshiba"};
+        String[] resolutions = {"4K", "2k", "FHD", "HD"};
+        Random rand = new Random();
+
+        for (int i = 1; i <= n; i++) {
+            String product_id = "TV" + i;
+            String product_name = brands[rand.nextInt(brands.length)] + " TV " + i;
+            double product_price = (double) (Math.random() * 1000);
+            int product_total = (int) (Math.random() * 10);
+            double screen_size = 32 + (double) (Math.random() * 100);
+            String resolution = resolutions[rand.nextInt(resolutions.length)];
+            boolean isSmart = rand.nextBoolean();
+
+            TV tv = new TV(product_id, product_name, product_price, product_total, screen_size, resolution, isSmart);
+            addTV(tv);
+        }
+    }
+
+    public static void main(String[] args) {
+        TVManager tvManager = new TVManagerImpl();
+
+        // Test generateList
+        tvManager.generateList(10);
+        tvManager.sortByPrice(0).forEach(System.out::println);
+
+        System.out.println("==================1==========================================");
+
+        // Test add, edit, delete, search, sort functionality as before
+
+        TV tv1 = new TV("TV11", "Samsung Smart TV", 300, 10, 55, "4K", true);
+        TV tv8 = new TV("TV8", "Sony Basic TV", 100, 7, 50, "FHD", false);
+
+        // Test add
+        System.out.println("Test add TV1: " + tvManager.addTV(tv1)); // ok
+        System.out.println("Test add TV8: " + tvManager.addTV(tv8)); // ok
+        System.out.println("Test add TV1 again: " + tvManager.addTV(tv1)); // err(trùng)
+        System.out.println("===================2=========================================");
+        tvManager.searchTV("Samsung").forEach(System.out::println);
+        System.out.println("============================================================");
+
+        // Tìm kiếm theo tên, theo giá, và theo thuộc tính được đề xuất riêng ở ý 1.2.
+        System.out.println("Search by name 'Sony': " + tvManager.searchTV("Sony") + "\n");
+        System.out.println("Search by price 100: " + tvManager.searchByPrice(100) + "\n");
+        System.out.println("Sorted by price: " + tvManager.sortByPrice(0) + "\n");
+        System.out.println("Sorted by resolution '4K': " + tvManager.sortByResolution("4K") + "\n");
+        System.out.println("===================3=========================================");
+
+        // Test sửa
+        TV editedTV = new TV("TV3", "Sony TV NEW", 650.0, 6, 52, "HD", true);
+        System.out.println("Sửa TV3: " + tvManager.editTV(editedTV));
+        System.out.println("Đã sửa TV3?:");
+        tvManager.searchTV("Sony").forEach(System.out::println);
+
+        // Test xóa
+        System.out.println("Xóa TV8: " + tvManager.delTV(tv8));
+        System.out.println("Đã xóa TV8?:");
+        tvManager.searchTV("Sony").forEach(System.out::println);
+
+        System.out.println("====================4========================================");
+    }
+
+}

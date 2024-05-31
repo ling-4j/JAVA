@@ -1,0 +1,15 @@
+package objects;
+
+import java.util.List;
+
+public interface TVManager {
+    public boolean addTV(TV t);
+    public boolean editTV(TV t);
+    public boolean delTV(TV t);
+    
+    public void generateList(int n);//sinh data
+    public List<TV> searchTV(String key); // tìm kiếm theo tên, theo kích thước
+    public List<TV> searchTV(double price); //tìm kiếm theo giá
+    public List<TV> sortedTV(double price); //sắp xếp theo giá
+    public List<TV> sortedTV(String resolution); //sắp xếp theo độ phân giải
+}

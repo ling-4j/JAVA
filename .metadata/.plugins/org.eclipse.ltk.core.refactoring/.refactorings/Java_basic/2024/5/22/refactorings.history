@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;objects.TVManagerImpl&apos; to &apos;TVManager&apos;&#x0D;&#x0A;- Original project: &apos;Java_basic&apos;&#x0D;&#x0A;- Original element: &apos;objects.TVManagerImpl&apos;&#x0D;&#x0A;- Renamed element: &apos;objects.TVManager&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;TVManagerImpl&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;objects{TVManagerImpl.java[TVManagerImpl" matchStrategy="1" name="TVManager" qualified="false" references="true" similarDeclarations="false" stamp="1717071972228" textual="false" version="1.0"/>
+</session>

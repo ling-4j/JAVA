@@ -1,0 +1,49 @@
+package objects;
+
+public class TV extends Product {
+    private double screenSize;
+    private String resolution;
+    private boolean isSmart;
+
+    //constructor ko tham số
+    public TV() {
+    }
+
+    //constructor đủ tham số
+    public TV(String productId, String productName, double productPrice, int productTotal, double screenSize, String resolution, boolean isSmart) {
+        super(productId, productName, productPrice, productTotal);
+        this.screenSize = screenSize;
+        this.resolution = resolution;
+        this.isSmart = isSmart;
+    }
+
+    public double getScreenSize() {
+        return screenSize;
+    }
+
+    public void setScreenSize(double screenSize) {
+        this.screenSize = screenSize;
+    }
+
+    public String getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(String resolution) {
+        this.resolution = resolution;
+    }
+
+    public boolean isSmart() {
+        return isSmart;
+    }
+
+    public void setSmart(boolean isSmart) {
+        this.isSmart = isSmart;
+    }
+
+    @Override
+    public String toString() {
+        return "TV [screenSize=" + screenSize + ", resolution=" + resolution + ", isSmart=" + isSmart + ", " + super.toString() + "]";
+    }
+
+}
