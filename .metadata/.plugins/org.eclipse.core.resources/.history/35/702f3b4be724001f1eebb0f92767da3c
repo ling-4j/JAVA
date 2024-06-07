@@ -1,0 +1,244 @@
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.text.DecimalFormat;
+import java.util.List;
+import objects.TV;
+import objects.TVManager;
+import objects.TVManagerImpl;
+import myio.MyFile;
+import java.io.IOException;
+
+public class TVManagerGUI extends JFrame {
+
+	private DefaultTableModel tableModel;
+	private JTextField tfProductID, tfProductName, tfProductPrice, tfProductTotal, tfScreenSize, tfResolution,
+			tfSearchKeyword;
+	private JCheckBox cbIsSmart;
+	private JTable table;
+	private TVManager tvManager;
+	private DecimalFormat decimalFormat;
+
+	public TVManagerGUI() {
+		setTitle("Quản Lý TV");
+		setSize(800, 600);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
+
+		tvManager = new TVManagerImpl();
+		decimalFormat = new DecimalFormat("#.00");
+
+		String[] columnNames = { "Mã Sản Phẩm", "Tên Sản Phẩm", "Giá Sản Phẩm", "Số Lượng", "Kích Thước Màn Hình",
+				"Độ Phân Giải", "Smart TV" };
+		tableModel = new DefaultTableModel(columnNames, 0);
+
+		table = new JTable(tableModel);
+
+		JScrollPane scrollPane = new JScrollPane(table);
+
+		JPanel inputPanel = new JPanel(new GridLayout(0, 2, 10, 10));
+		inputPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		JLabel[] labels = { new JLabel("Mã Sản Phẩm:"), new JLabel("Tên Sản Phẩm:"), new JLabel("Giá Sản Phẩm:"),
+				new JLabel("Số Lượng:"), new JLabel("Kích Thước Màn Hình:"), new JLabel("Độ Phân Giải:"),
+				new JLabel("Smart TV:") };
+		tfProductID = new JTextField();
+		tfProductName = new JTextField();
+		tfProductPrice = new JTextField();
+		tfProductTotal = new JTextField();
+		tfScreenSize = new JTextField();
+		tfResolution = new JTextField();
+		cbIsSmart = new JCheckBox();
+		JComponent[] components = { tfProductID, tfProductName, tfProductPrice, tfProductTotal, tfScreenSize,
+				tfResolution, cbIsSmart };
+		for (int i = 0; i < labels.length; i++) {
+			inputPanel.add(labels[i]);
+			inputPanel.add(components[i]);
+		}
+
+		JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+		searchPanel.setBorder(BorderFactory.createTitledBorder("Tìm Kiếm"));
+		JLabel lblSearchKeyword = new JLabel("Từ Khóa:");
+		tfSearchKeyword = new JTextField(50);
+		JButton btnSearch = new JButton("Tìm Kiếm");
+		searchPanel.add(lblSearchKeyword);
+		searchPanel.add(tfSearchKeyword);
+		searchPanel.add(btnSearch);
+
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		JButton btnAdd = new JButton("Thêm TV");
+		JButton btnEdit = new JButton("Chỉnh Sửa TV");
+		JButton btnDelete = new JButton("Xóa TV");
+		JButton btnSortByPrice = new JButton("Sắp Xếp theo Giá");
+		JButton btnSortByResolution = new JButton("Sắp Xếp theo Độ Phân Giải");
+		buttonPanel.add(btnAdd);
+		buttonPanel.add(btnEdit);
+		buttonPanel.add(btnDelete);
+		buttonPanel.add(btnSortByPrice);
+		buttonPanel.add(btnSortByResolution);
+
+		JPanel searchButtonPanel = new JPanel();
+		searchButtonPanel.setLayout(new BoxLayout(searchButtonPanel, BoxLayout.Y_AXIS));
+		searchButtonPanel.add(searchPanel);
+		searchButtonPanel.add(buttonPanel);
+
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(inputPanel, BorderLayout.NORTH);
+		panel.add(scrollPane, BorderLayout.CENTER);
+		panel.add(searchButtonPanel, BorderLayout.SOUTH);
+
+		add(panel);
+
+		setVisible(true);
+
+		btnAdd.addActionListener(e -> addTV());
+		btnEdit.addActionListener(e -> editTV());
+		btnDelete.addActionListener(e -> deleteTV());
+		btnSearch.addActionListener(e -> searchTV());
+		btnSortByPrice.addActionListener(e -> sortByPrice());
+		btnSortByResolution.addActionListener(e -> sortByResolution());
+		loadData(); // Load dữ liệu khi chương trình khởi động
+	}
+
+	private void loadData() {
+		try {
+			tvManager.generateList(10);
+			tvManager.saveToFile("TV.bin");
+			List<TV> loadedList = (List<TV>) MyFile.binaryInputFile("TV.bin");
+			displaySearchResult(loadedList);
+		} catch (IOException | ClassNotFoundException e) {
+			JOptionPane.showMessageDialog(this, "Lỗi khi tải dữ liệu từ file: " + e.getMessage(), "Lỗi",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void exportData() {
+		try {
+			tvManager.saveToFile("TV.bin");
+			JOptionPane.showMessageDialog(this, "Dữ liệu đã được xuất thành công vào file TV.bin", "Thành Công",
+					JOptionPane.INFORMATION_MESSAGE);
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, "Lỗi khi xuất dữ liệu vào file: " + e.getMessage(), "Lỗi",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void addTV() {
+		String productID = tfProductID.getText().trim();
+		String productName = tfProductName.getText().trim();
+		double productPrice = Double.parseDouble(tfProductPrice.getText().trim());
+		int productTotal = Integer.parseInt(tfProductTotal.getText().trim());
+		double screenSize = Double.parseDouble(tfScreenSize.getText().trim());
+		String resolution = tfResolution.getText().trim();
+		boolean isSmart = cbIsSmart.isSelected();
+
+		TV tv = new TV(productID, productName, productPrice, productTotal, screenSize, resolution, isSmart);
+
+		if (tvManager.addTV(tv)) {
+			Object[] rowData = { tv.getproduct_id(), tv.getproduct_name(), decimalFormat.format(tv.getproduct_price()),
+					tv.getproduct_total(), decimalFormat.format(tv.getscreen_size()), tv.getResolution(),
+					tv.isSmart() };
+			tableModel.addRow(rowData);
+			clearFields();
+			JOptionPane.showMessageDialog(this, "TV được thêm thành công!", "Thành Công",
+					JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, "Mã Sản Phẩm đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void editTV() {
+        int rowIndex = table.getSelectedRow();
+        if (rowIndex != -1) {
+            String productID = tfProductID.getText().trim();
+            String productName = tfProductName.getText().trim();
+            double productPrice = Double.parseDouble(tfProductPrice.getText().trim());
+            int productTotal = Integer.parseInt(tfProductTotal.getText().trim());
+            double screenSize = Double.parseDouble(tfScreenSize.getText().trim());
+            String resolution = tfResolution.getText().trim();
+            boolean isSmart = cbIsSmart.isSelected();
+
+            TV tv = new TV(productID, productName, productPrice, productTotal, screenSize, resolution, isSmart
+                    TV editedTV = tvManager.getTVByIndex(rowIndex);
+                    if (editedTV != null) {
+                        editedTV.setproduct_name(productName);
+                        editedTV.setproduct_price(productPrice);
+                        editedTV.setproduct_total(productTotal);
+                        editedTV.setscreen_size(screenSize);
+                        editedTV.setResolution(resolution);
+                        editedTV.setSmart(isSmart);
+
+                        tableModel.setValueAt(productName, rowIndex, 1);
+                        tableModel.setValueAt(decimalFormat.format(productPrice), rowIndex, 2);
+                        tableModel.setValueAt(productTotal, rowIndex, 3);
+                        tableModel.setValueAt(decimalFormat.format(screenSize), rowIndex, 4);
+                        tableModel.setValueAt(resolution, rowIndex, 5);
+                        tableModel.setValueAt(isSmart, rowIndex, 6);
+
+                        clearFields();
+                        JOptionPane.showMessageDialog(this, "TV được chỉnh sửa thành công!", "Thành Công",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Vui lòng chọn một TV để chỉnh sửa!", "Lỗi",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+	private void deleteTV() {
+		int rowIndex = table.getSelectedRow();
+		if (rowIndex != -1) {
+			String productID = tfProductID.getText().trim();
+			if (tvManager.deleteTV(productID)) {
+				tableModel.removeRow(rowIndex);
+				clearFields();
+				JOptionPane.showMessageDialog(this, "TV đã được xóa thành công!", "Thành Công",
+						JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(this, "Không tìm thấy TV với mã sản phẩm đã cho!", "Lỗi",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		} else {
+			JOptionPane.showMessageDialog(this, "Vui lòng chọn một TV để xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void searchTV() {
+		String keyword = tfSearchKeyword.getText().trim();
+		List<TV> searchResult = tvManager.searchTV(keyword);
+		displaySearchResult(searchResult);
+	}
+
+	private void sortByPrice() {
+		tvManager.sortTVByPrice();
+		displaySearchResult(tvManager.getList());
+	}
+
+	private void sortByResolution() {
+		tvManager.sortTVByResolution();
+		displaySearchResult(tvManager.getList());
+	}
+
+	private void displaySearchResult(List<TV> searchResult) {
+		tableModel.setRowCount(0);
+		for (TV tv : searchResult) {
+			Object[] rowData = { tv.getproduct_id(), tv.getproduct_name(), decimalFormat.format(tv.getproduct_price()),
+					tv.getproduct_total(), decimalFormat.format(tv.getscreen_size()), tv.getResolution(),
+					tv.isSmart() };
+			tableModel.addRow(rowData);
+		}
+	}
+
+	private void clearFields() {
+		tfProductID.setText("");
+		tfProductName.setText("");
+		tfProductPrice.setText("");
+		tfProductTotal.setText("");
+		tfScreenSize.setText("");
+		tfResolution.setText("");
+		cbIsSmart.setSelected(false);
+	}
+
+	public static void main(String[] args) {
+		new TVManagerGUI();
+	}
+}}
