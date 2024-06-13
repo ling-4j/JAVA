@@ -177,16 +177,16 @@ public class TVManagerGUI extends JFrame {
 		tvManager.generateList(10);
 		try {
 			MyFile.binaryOutputFile("TV.bin", tvManager.searchTV(""));
-			System.out.println("Successfully wrote the list to TV.bin");
+			System.out.println("Ghi thành công vào TV.bin");
 		} catch (IOException e) {
-			System.err.println("Error occurred while writing to file: " + e.getMessage());
+			System.err.println("Lỗi quá trình ghi file: " + e.getMessage());
 		}
 
 		try {
 			List<TV> loadedList = (List<TV>) MyFile.binaryInputFile("TV.bin");
 			updateTable(loadedList);
 		} catch (IOException | ClassNotFoundException e) {
-			System.err.println("Error occurred while reading from file: " + e.getMessage());
+			System.err.println("Lỗi quá trình đọc file: " + e.getMessage());
 		}
 	}
 
@@ -255,7 +255,7 @@ public class TVManagerGUI extends JFrame {
 		}
 	}
 
-	// Phương thức tìm kiếm TV
+	// Phương thức tìm kiếm tương đối TV theo tên, giá, kích thước, độ phân giải  
 	private void searchTV() {
 		String keyword = tfSearchKeyword.getText().trim();
 		List<TV> searchResult = tvManager.searchTV(keyword);
