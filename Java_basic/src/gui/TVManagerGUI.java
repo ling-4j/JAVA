@@ -30,7 +30,6 @@ public class TVManagerGUI extends JFrame {
 		setLocationRelativeTo(null);
 
 		tvManager = new TVManagerImpl(); // Khởi tạo quản lý TV
-		tvManager.generateList(10); // Tạo danh sách TV với 10 mục
 
 		decimalFormat = new DecimalFormat("#.00"); // Định dạng giá với 2 chữ số thập phân
 
@@ -247,6 +246,8 @@ public class TVManagerGUI extends JFrame {
 				// Xóa hàng được chọn từ bảng nếu xóa thành công từ quản lý
 				tableModel.removeRow(rowIndex);
 				clearFields();
+				JOptionPane.showMessageDialog(this, "Đã xóa thành công TV!", "Thành Công",
+						JOptionPane.INFORMATION_MESSAGE);
 			} else {
 				JOptionPane.showMessageDialog(this, "Lỗi xóa TV!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 			}
@@ -274,7 +275,7 @@ public class TVManagerGUI extends JFrame {
 		updateTable(sortedList);
 	}
 
-	// Phương thức import dữ liệu từ file
+	// Phương thức import dữ liệu từ file (err: thiếu cập nhật lại ds TV vào ds đối tượng tvManager)
 	private void importData() {
 	    try {
 	        List<TV> loadedList = (List<TV>) MyFile.binaryInputFile("TV.bin");
