@@ -37,7 +37,7 @@ public class MyFile {
 				objects.add(obj);
 			}
 		} catch (EOFException e) {
-			// Do nothing, reached end of file
+			//ko có gì
 		}
 		return objects;
 	}
