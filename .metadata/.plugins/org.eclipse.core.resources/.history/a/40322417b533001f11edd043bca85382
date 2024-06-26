@@ -12,7 +12,7 @@ public class MyFile {
 	 * @param filename tên của file cần ghi dữ liệu
 	 * @param objects  danh sách đối tượng cần ghi vào file
 	 */
-	public static void binaryOutputFile(String filename, List<?> objects) throws IOException {
+	public static void binaryOutputFile(String filename,	 List<?> objects) throws IOException {
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
 			for (Object obj : objects) {
 				oos.writeObject(obj);
@@ -34,6 +34,11 @@ public class MyFile {
 				objects.add(obj);
 			}
 		} catch (EOFException e) {
+<<<<<<< HEAD
+			
+=======
+			//ko có gì
+>>>>>>> f3280d795267a2a58bc5699b326d1045d7fca353
 		}
 		return objects;
 	}
