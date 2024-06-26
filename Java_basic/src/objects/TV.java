@@ -59,36 +59,4 @@ public class TV extends Product implements Serializable {
 		return String.format("TV [screen_size=%.2f, resolution=%s, isSmart=%b, %s]", screen_size, resolution, isSmart,
 				super.toString());
 	}
-
-	public static void main(String[] args) {
-		// tv1
-		TV tv1 = new TV();
-		System.out.println("TV1: " + tv1);
-
-		System.out.println("============================================================");
-		// tv2
-		TV tv2 = new TV("TV001", "Samsung Smart TV", 500.0, 10, 55, "4K", true);
-		System.out.println("TV2: " + tv2);
-
-		System.out.println("============================================================");
-
-		tv2.setproduct_id("TV002");
-		tv2.setproduct_name("LG OLED TV");
-		tv2.setproduct_price(8_600_000);
-		tv2.setproduct_total(5);
-		tv2.setscreen_size(65);
-		tv2.setResolution("4K");
-		tv2.setSmart(true);
-
-		System.out.println("Update TV2: " + tv2);
-		System.out.println("Product ID: " + tv2.getproduct_id());
-		System.out.println("Product Name: " + tv2.getproduct_name());
-		System.out.println("Product Price: " + tv2.getproduct_price());
-		System.out.println("Product Total: " + tv2.getproduct_total());
-		System.out.println("Screen Size: " + tv2.getscreen_size());
-		System.out.println("Resolution: " + tv2.getResolution());
-		System.out.println("Is Smart: " + tv2.isSmart());
-		System.out.println("============================================================");
-	}
-
 }

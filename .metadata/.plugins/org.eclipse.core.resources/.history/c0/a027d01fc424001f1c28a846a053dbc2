@@ -1,7 +1,0 @@
-package myio;
-
-import java.io.*;
-
-public class MyFile {
-
-}

@@ -1,17 +1,14 @@
 package objects;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-import myio.MyFile;
 
 public class TVManagerImpl implements TVManager {
 	protected ArrayList<TV> list = new ArrayList<>();
 
-	// Kiểm tra TV đã tồn tại
 	private boolean isExisting(TV t) {
 		boolean flag = false;
 		for (TV tv : list) {
@@ -44,7 +41,6 @@ public class TVManagerImpl implements TVManager {
 	@Override
 	public boolean delTV(TV t) {
 		for (int i = 0; i < list.size(); i++) {
-//	        if (list.get(i).equals(t)) {
 			if (list.get(i).getproduct_id().equals(t.getproduct_id())) {
 				list.remove(i);
 				return true;
@@ -67,17 +63,6 @@ public class TVManagerImpl implements TVManager {
 		return result;
 	}
 
-//	@Override
-//	public List<TV> searchByPrice(double price) {
-//	    List<TV> result = new ArrayList<>();
-//	    for (TV tv : list) {
-//	        if (tv.getproduct_price() == price) {
-//	            result.add(tv);
-//	        }
-//	    }
-//	    return result;
-//	}
-
 	@Override
 	public List<TV> sortByPrice(boolean isINC) {
 		int n = list.size();
@@ -87,7 +72,6 @@ public class TVManagerImpl implements TVManager {
 				TV tv2 = list.get(j + 1);
 				if (isINC) {
 					if (tv1.getproduct_price() > tv2.getproduct_price()) {
-						// đổi chỗ
 						list.set(j, tv2);
 						list.set(j + 1, tv1);
 					}
@@ -142,31 +126,4 @@ public class TVManagerImpl implements TVManager {
 			addTV(tv);
 		}
 	}
-
-	public static void main(String[] args) {
-		TVManagerImpl tvManager = new TVManagerImpl();
-
-		// Sinh danh sách các TV
-		tvManager.generateList(10);
-
-		// Ghi danh sách vào tệp bin
-		try {
-			MyFile.binaryOutputFile("TV.bin", tvManager.list);
-			System.out.println("Đã ghi danh sách vào tệp TVList.bin");
-		} catch (IOException e) {
-			System.err.println("Error " + e.getMessage());
-		}
-
-		// Đọc tệp bin
-		try {
-			List<?> objects = MyFile.binaryInputFile("TV.bin");
-			System.out.println("Đã đọc danh sách từ tệp TVList.bin:");
-			for (Object obj : objects) {
-				System.out.println(obj);
-			}
-		} catch (IOException | ClassNotFoundException e) {
-			System.err.println("Error " + e.getMessage());
-		}
-	}
-
 }

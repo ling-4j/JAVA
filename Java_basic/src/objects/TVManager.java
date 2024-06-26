@@ -7,14 +7,8 @@ public interface TVManager {
 	public boolean editTV(TV t);
 	public boolean delTV(TV t);
 
-	public void generateList(int n); // Sinh data
-
-	// tìm kiếm
-	public List<TV> searchTV(String keyword); // Tìm kiếm theo tên; độ phân giải (bổ sung giá; kích thước màn)
-//    public List<TV> searchByPrice(double price); // Tìm kiếm theo giá
-
-	// sắp xếp
-	public List<TV> sortByPrice(boolean isINC); // Sắp xếp theo giá
-
-	public List<TV> sortByResolution(); // Sắp xếp theo độ phân giải
+	public void generateList(int n); 
+	public List<TV> searchTV(String keyword); 
+	public List<TV> sortByPrice(boolean isINC);
+	public List<TV> sortByResolution(); 
 }
