@@ -1,0 +1,16 @@
+package objects;
+
+import java.util.List;
+
+public interface XManager {
+
+	boolean addX(Housing x);
+
+	boolean editX(Housing x);
+
+	boolean delX(Housing x);
+
+	List<Housing> searchX(String query);
+
+	List<Housing> sortedX(boolean ascending);
+}

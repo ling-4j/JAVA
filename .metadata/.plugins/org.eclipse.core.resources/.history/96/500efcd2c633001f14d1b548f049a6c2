@@ -1,0 +1,81 @@
+package objects;
+
+public class Product {
+    private int product_id;
+    private String product_name;
+    private double product_price;
+    private int product_total;
+
+    // Constructor khĂ´ng tham sá»‘
+    public Product() {
+    }
+
+    // Constructor vá»›i Ä‘áº§y Ä‘á»§ tham sá»‘
+    public Product(int product_id, String product_name, double product_price, int product_total) {
+        this.product_id = product_id;
+        this.product_name = product_name;
+        this.product_price = product_price;
+        this.product_total = product_total;
+    }
+
+    // CĂ¡c phÆ°Æ¡ng thá»©c getter vĂ  setter
+    public int getProduct_id() {
+        return product_id;
+    }
+
+    public void setProduct_id(int product_id) {
+        this.product_id = product_id;
+    }
+
+    public String getProduct_name() {
+        return product_name;
+    }
+
+    public void setProduct_name(String product_name) {
+        this.product_name = product_name;
+    }
+
+    public double getProduct_price() {
+        return product_price;
+    }
+
+    public void setProduct_price(double product_price) {
+        this.product_price = product_price;
+    }
+
+    public int getProduct_total() {
+        return product_total;
+    }
+
+    public void setProduct_total(int product_total) {
+        this.product_total = product_total;
+    }
+
+    // Override phÆ°Æ¡ng thá»©c toString() Ä‘á»ƒ xuáº¥t thĂ´ng tin Ä‘á»‘i tÆ°á»£ng
+    @Override
+    public String toString() {
+        return "Product{" +
+                "product_id=" + product_id +
+                ", product_name='" + product_name + '\'' +
+                ", product_price=" + product_price +
+                ", product_total=" + product_total +
+                '}';
+    }
+
+    // Main method Ä‘á»ƒ thá»­ nghiá»‡m
+    public static void main(String[] args) {
+        // Táº¡o Ä‘á»‘i tÆ°á»£ng Product báº±ng constructor khĂ´ng tham sá»‘
+        Product product1 = new Product();
+        product1.setProduct_id(1);
+        product1.setProduct_name("Product A");
+        product1.setProduct_price(100.0);
+        product1.setProduct_total(50);
+
+        // Táº¡o Ä‘á»‘i tÆ°á»£ng Product báº±ng constructor cĂ³ tham sá»‘
+        Product product2 = new Product(2, "Product B", 200.0, 30);
+
+        // Xuáº¥t thĂ´ng tin cĂ¡c Ä‘á»‘i tÆ°á»£ng Product
+        System.out.println(product1);
+        System.out.println(product2);
+    }
+}

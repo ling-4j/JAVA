@@ -1,0 +1,74 @@
+package Tx2
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class HousingManager_V2 implements XManager {
+    private static final String FILE_NAME = "X.bin";
+    private List<Housing> inventory;
+
+    public HousingManager() {
+        inventory = loadFromFile();
+    }
+
+    @Override
+    public boolean addX(Housing x) {
+        boolean added = inventory.add(x);
+        saveToFile();
+        return added;
+    }
+
+    @Override
+    public boolean editX(Housing x) {
+        for (int i = 0; i < inventory.size(); i++) {
+            if (inventory.get(i).getProductId() == x.getProductId()) {
+                inventory.set(i, x);
+                saveToFile();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean delX(Housing x) {
+        boolean removed = inventory.removeIf(h -> h.getProductId() == x.getProductId());
+        saveToFile();
+        return removed;
+    }
+
+    @Override
+    public List<Housing> searchX(String query) {
+        return inventory.stream()
+                .filter(h -> h.getProductName().toLowerCase().contains(query.toLowerCase()) ||
+                             Double.toString(h.getProductPrice()).contains(query))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Housing> sortedX(boolean ascending) {
+        return inventory.stream()
+                .sorted(Comparator.comparingDouble(Housing::getProductPrice)
+                        .thenComparing(Housing::getProductId)
+                        .reversed())
+                .collect(Collectors.toList());
+    }
+
+    private List<Housing> loadFromFile() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            return (List<Housing>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    private void saveToFile() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            oos.writeObject(inventory);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

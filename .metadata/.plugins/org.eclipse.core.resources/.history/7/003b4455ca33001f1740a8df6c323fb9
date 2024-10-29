@@ -1,0 +1,145 @@
+package objects;
+
+import java.io.*;
+import java.util.*;
+
+public class TileManagerImpl implements TileManager, Serializable {
+    private static final long serialVersionUID = 1L;
+    public transient List<Tile> list;
+    private static final String FILE_NAME = "Tile.bin";
+
+    public TileManagerImpl() {
+        list = new ArrayList<>();
+        loadData();
+    }
+
+    @Override
+    public boolean addTile(Tile t) {
+        boolean find = list.stream().anyMatch(item -> item.getproduct_id() == t.getproduct_id());
+        if (!find) {
+            list.add(t);
+            exportFile();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean editTile(Tile t) {
+        boolean find = false;
+        for (Tile item : list) {
+            if (item.getproduct_id() == t.getproduct_id()) {
+                item.setproduct_name(t.getproduct_name());
+                item.setproduct_price(t.getproduct_price());
+                item.setproduct_total(t.getproduct_total());
+                item.setTile_brand(t.getTile_brand());
+                item.setTile_size_length(t.getTile_size_length());
+                item.setTile_size_width(t.getTile_size_width());
+                item.setTile_type(t.getTile_type());
+                find = true;
+                break;
+            }
+        }
+        if (find) {
+            exportFile();
+        }
+        return find;
+    }
+
+    @Override
+    public boolean delTile(Tile t) {
+        boolean find = list.removeIf(item -> item.getproduct_id() == t.getproduct_id());
+        if (find) {
+            exportFile();
+        }
+        return find;
+    }
+
+    @Override
+    public List<Tile> searchTileByName(String name) {
+        List<Tile> results = new ArrayList<>();
+        list.forEach(item -> {
+            if (item.getproduct_name().contains(name)) {
+                results.add(item);
+            }
+        });
+        return results;
+    }
+
+    @Override
+    public List<Tile> searchTileByPrice(double price) {
+        List<Tile> results = new ArrayList<>();
+        list.forEach(item -> {
+            if (item.getproduct_price() == price) {
+                results.add(item);
+            }
+        });
+        return results;
+    }
+
+    @Override
+    public List<Tile> searchTileByBrand(String brand) {
+        List<Tile> results = new ArrayList<>();
+        list.forEach(item -> {
+            if (item.getTile_brand().contains(brand)) {
+                results.add(item);
+            }
+        });
+        return results;
+    }
+
+    @Override
+    public List<Tile> sortedTileByPrice(boolean isASC) {
+        list.sort(Comparator.comparing(Tile::getproduct_price));
+        if (!isASC) {
+            Collections.reverse(list);
+        }
+        return new ArrayList<>(list);
+    }
+
+    @Override
+    public List<Tile> sortedTileByBrand(boolean isASC) {
+        list.sort(Comparator.comparing(Tile::getTile_brand));
+        if (!isASC) {
+            Collections.reverse(list);
+        }
+        return new ArrayList<>(list);
+    }
+
+    @Override
+    public List<Tile> sortedTileByType(boolean isASC) {
+        list.sort(Comparator.comparing(Tile::getTile_type));
+        if (!isASC) {
+            Collections.reverse(list);
+        }
+        return new ArrayList<>(list);
+    }
+
+    public void printInfor() {
+        list.forEach(System.out::println);
+    }
+
+    private void exportFile() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            oos.writeObject(list);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadData() {
+        File file = new File(FILE_NAME);
+        if (file.exists() && file.isFile()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+                list = (List<Tile>) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            list = new ArrayList<>();
+            exportFile();
+        }
+    }
+}

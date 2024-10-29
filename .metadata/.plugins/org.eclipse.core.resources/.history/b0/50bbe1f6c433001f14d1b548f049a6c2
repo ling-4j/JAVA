@@ -1,0 +1,265 @@
+package gui;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.border.TitledBorder;
+
+import objects.Tile;
+import objects.TileManagerImpl;
+
+public class TileProductUI extends JFrame {
+    TileManagerImpl tile;
+    Tile t = new Tile();
+    private int pos = 0;
+
+    private JPanel contentPane;
+    private JTextField txtId;
+    private JTextField txtName;
+    private JTextField txtPrice;
+    private JTextField txtTotal;
+    private JTextField txtBrand;
+    private JTextField txtLength;
+    private JTextField txtWidth;
+    private JTextField txtType;
+    private JTable tblTile;
+    private JTextField txtSearch;
+
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    TileProductUI frame = new TileProductUI();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * Create the frame.
+     */
+    public TileProductUI() {
+        tile = new TileManagerImpl();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 1003, 586);
+        contentPane = new JPanel();
+        contentPane.setBackground(new Color(244, 244, 244));
+        contentPane.setForeground(new Color(0, 128, 255));
+        contentPane.setBorder(new LineBorder(new Color(0, 0, 0)));
+        setContentPane(contentPane);
+
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(192, 192, 192));
+        panel.setForeground(new Color(192, 192, 192));
+        GroupLayout groupLayout = new GroupLayout(contentPane);
+        groupLayout.setHorizontalGroup(
+            groupLayout.createParallelGroup(Alignment.LEADING)
+                .addComponent(panel, GroupLayout.DEFAULT_SIZE, 987, Short.MAX_VALUE)
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(txtSearch, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                    .addComponent(btnSearch)
+                    .addContainerGap(731, Short.MAX_VALUE))
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 967, Short.MAX_VALUE)
+                    .addContainerGap())
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(btnAdd, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                    .addComponent(btnUpdate, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                    .addComponent(btnDel, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                    .addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(575, Short.MAX_VALUE))
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(btnSortPrice)
+                    .addGap(18)
+                    .addComponent(btnSortBrand)
+                    .addContainerGap(768, Short.MAX_VALUE))
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addComponent(lblNewLabel_1)
+                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                            .addComponent(txtId, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addComponent(lblNewLabel_1_1)
+                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                            .addComponent(txtName, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addComponent(lblNewLabel_1_2)
+                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                            .addComponent(txtPrice, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addComponent(lblNewLabel_1_3)
+                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                            .addComponent(txtTotal, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addComponent(lblNewLabel_1_3_1)
+                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                            .addComponent(txtBrand, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addComponent(lblNewLabel_1_3_2)
+                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                            .addComponent(txtType, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addComponent(lblNewLabel_1_3_3)
+                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                            .addComponent(txtLength, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addComponent(lblNewLabel_1_3_4)
+                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                            .addComponent(txtWidth, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap(765, Short.MAX_VALUE))
+        );
+        groupLayout.setVerticalGroup(
+            groupLayout.createParallelGroup(Alignment.LEADING)
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addComponent(panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addGap(18)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblNewLabel_1)
+                        .addComponent(txtId, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblNewLabel_1_1)
+                        .addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblNewLabel_1_2)
+                        .addComponent(txtPrice, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblNewLabel_1_3)
+                        .addComponent(txtTotal, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblNewLabel_1_3_1)
+                        .addComponent(txtBrand, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblNewLabel_1_3_2)
+                        .addComponent(txtType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblNewLabel_1_3_3)
+                        .addComponent(txtLength, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblNewLabel_1_3_4)
+                        .addComponent(txtWidth, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(18)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(txtSearch, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSearch))
+                    .addGap(18)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(btnAdd)
+                        .addComponent(btnUpdate)
+                        .addComponent(btnDel)
+                        .addComponent(btnCancel))
+                    .addGap(18)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(btnSortPrice)
+                        .addComponent(btnSortBrand))
+                    .addGap(18)
+                    .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                    .addContainerGap())
+        );
+
+        panel.setLayout(new GroupLayout(panel));
+        panel.setLayout(groupLayout);
+
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(331, 142, 604, 270);
+        contentPane.add(scrollPane);
+
+        tblTile = new JTable();
+        scrollPane.setViewportView(tblTile);
+        tblTile.setFillsViewportHeight(true);
+        tblTile.setToolTipText("");
+        tblTile.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        tblTile.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                pos = tblTile.getSelectedRow();
+                View();
+            }
+        });
+        tblTile.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                pos = tblTile.getSelectedRow();
+                View();
+            }
+        });
+        tblTile.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblTile.setModel(new DefaultTableModel(
+            new Object[][] {
+            },
+            new String[] {
+                "Id", "Name", "Price", "Total", "Brand", "Type", "Length", "Width"
+            }
+        ));
+        tblTile.getTableHeader();
+
+        tblTile.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        JTableHeader header = tblTile.getTableHeader();
+        tblTile.setRowHeight(28);
+
+        tile.list.add(new Tile("T1","Gạch granite",200000,10,"Viglacia","Vân đá",800,800));
+        tile.list.add(new Tile("T2","Gạch ceramic",1800000,20,"Apodio","Vân gỗ",600,900));
+        tile.list.add(new Tile("T3","Gạch granite",200000,30,"Casagranda","Thiết kế mosaics",600,600));
+        tile.list.add(new Tile("T4","Gạch ceramic",300000,50,"Figuas","Vân đá",1200,600));
+        tile.list.add(new Tile("T5","Gạch ceramic",150000,40,"Paco","Vân đá",400,800));
+        tblTile = new JTable();
+        JTableHeader header=tblTile.getTableHeader();
+        tblTile.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private void View() {
+        txtId.setText(tblTile.getValueAt(pos, 0).toString());
+        txtName.setText(tblTile.getValueAt(pos, 1).toString());
+        txtPrice.setText(tblTile.getValueAt(pos, 2).toString());
+        txtTotal.setText(tblTile.getValueAt(pos, 3).toString());
+        txtBrand.setText(tblTile.getValueAt(pos, 4).toString());
+        txtType.setText(tblTile.getValueAt(pos, 5).toString());
+        txtLength.setText(tblTile.getValueAt(pos, 6).toString());
+        txtWidth.setText(tblTile.getValueAt(pos, 7).toString());
+    }
+}

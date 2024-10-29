@@ -1,0 +1,82 @@
+package Ktra;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+public interface HousingManager {
+    boolean addHousing(Housing h);
+    boolean editHousing(Housing h);
+    boolean delHousing(Housing h);
+    List<Housing> searchHousing(String name);
+    List<Housing> sortedHousing(double price);
+}
+
+public class HousingManagerImpl implements HousingManager {
+    private List<Housing> housings = new ArrayList<>();
+
+    @Override
+    public boolean addHousing(Housing h) {
+        return housings.add(h);
+    }
+
+    @Override
+    public boolean editHousing(Housing h) {
+        for (int i = 0; i < housings.size(); i++) {
+            if (housings.get(i).getName().equals(h.getName())) {
+                housings.set(i, h);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean delHousing(Housing h) {
+        return housings.remove(h);
+    }
+
+    @Override
+    public List<Housing> searchHousing(String name) {
+        return housings.stream()
+                .filter(h -> h.getName().equalsIgnoreCase(name))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Housing> sortedHousing(double price) {
+        return housings.stream()
+                .sorted((h1, h2) -> Double.compare(h1.getPrice(), h2.getPrice()))
+                .collect(Collectors.toList());
+    }
+
+    // Thêm phương thức main để thử nghiệm
+    public static void main(String[] args) {
+        HousingManager manager = new HousingManagerImpl();
+        Housing h1 = new Housing("House1", 100000, 120);
+        Housing h2 = new Housing("House2", 150000, 130);
+        Housing h3 = new Housing("House3", 90000, 110);
+
+        manager.addHousing(h1);
+        manager.addHousing(h2);
+        manager.addHousing(h3);
+
+        System.out.println("All housings:");
+        manager.sortedHousing(0).forEach(System.out::println);
+
+        System.out.println("Search for 'House1':");
+        manager.searchHousing("House1").forEach(System.out::println);
+
+        h1.setPrice(110000);
+        manager.editHousing(h1);
+
+        System.out.println("All housings after editing House1:");
+        manager.sortedHousing(0).forEach(System.out::println);
+
+        manager.delHousing(h2);
+
+        System.out.println("All housings after deleting House2:");
+        manager.sortedHousing(0).forEach(System.out::println);
+    }
+}

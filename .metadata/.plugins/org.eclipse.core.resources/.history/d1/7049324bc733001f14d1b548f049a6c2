@@ -1,0 +1,55 @@
+package objects;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+public interface HousingManager {
+    boolean addHousing(Housing h);
+    boolean editHousing(Housing h);
+    boolean delHousing(Housing h);
+    List<Housing> searchHousing(String name);
+    List<Housing> sortedHousing(double price);
+}
+
+public class HousingManagerImpl implements HousingManager {
+    private List<Housing> housings = new ArrayList<>();
+
+    @Override
+    public boolean addHousing(Housing h) {
+        return housings.add(h);
+    }
+
+    @Override
+    public boolean editHousing(Housing h) {
+        for (int i = 0; i < housings.size(); i++) {
+            if (housings.get(i).getName().equals(h.getName())) {
+                housings.set(i, h);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean delHousing(Housing h) {
+        return housings.remove(h);
+    }
+
+    @Override
+    public List<Housing> searchHousing(String name) {
+        return housings.stream()
+                .filter(h -> h.getName().equalsIgnoreCase(name))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Housing> sortedHousing(double price) {
+        return housings.stream()
+                .sorted((h1, h2) -> Double.compare(h1.getPrice(), h2.getPrice()))
+                .collect(Collectors.toList());
+    }
+
+    
+}
